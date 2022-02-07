@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Vocal Assistant.iml" filepath="$PROJECT_DIR$/Vocal Assistant.iml" />
       <module fileurl="file://$PROJECT_DIR$/VocalAssistant.iml" filepath="$PROJECT_DIR$/VocalAssistant.iml" />
     </modules>
   </component>
