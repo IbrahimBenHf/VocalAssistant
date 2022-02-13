@@ -4,9 +4,12 @@ import speech_recognition as sr
 from docx import Document
 import datetime
 import os
-import smtplib
 import ctypes
+import win32com.client
 from tensor import hide
+from openpyxl import Workbook
+
+from todo import show_todo
 
 language = 'en'
 
@@ -78,22 +81,38 @@ def takeCommand():
 
 
 def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    msg = outlook.CreateItem(0)
+    msg.To = "ibrahimbenhf@gmail.com"
+    msg.Subject = "my friend"
+    msg.Body = "hello, thank your."
+    msg.Send()
 
-    # Enable low security in gmail
-    server.login('your email id', 'your email password')
-    server.sendmail('your email id', to, content)
-    server.close()
+def sendMeeting():
+    import win32com.client
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    appt = outlook.CreateItem(1) # AppointmentItem
+    appt.Start = "2022-01-02 14:10" # yyyy-MM-dd hh:mm
+    appt.Subject = "Subject of the meeting"
+    appt.Duration = 60 # In minutes (60 Minutes)
+    appt.Location = "Location Name"
+    appt.MeetingStatus = 1 # 1 - olMeeting; Changing the appointment to meeting. Only after changing the meeting status recipients can be added
+    appt.Recipients.Add("ibrahimbenhf@gmail.com") # Don't end ; as delimiter
+    appt.Save()
+    appt.Send()
 
 
 if __name__ == '__main__':
+
+    path = os.getenv('APPDATA')+'/Vermera'
+    isExist = os.path.exists(path)
+    if not isExist:
+        os.makedirs(path)
+
+
     clear = lambda: os.system('cls')
 
-    # This Function will clean any
-    # command before execution of this python file
-
+    # This Function will clean any command before execution of this python file
     clear()
     wishMe()
 
@@ -109,13 +128,16 @@ if __name__ == '__main__':
             try:
                 speak("What should I say?")
                 content = takeCommand()
-                speak("whome should i send")
+                speak("who should i send to")
                 to = input()
                 sendEmail(to, content)
                 speak("Email has been sent !")
             except Exception as e:
                 print(e)
                 speak("I am not able to send this email")
+
+        elif 'meeting' in query:
+            speak("meeting")
 
         elif 'exit' in query:
             speak("Thanks for giving me your time")
@@ -148,9 +170,9 @@ if __name__ == '__main__':
                 language='fr'
             speak("Language Changed")
             if language == 'en':
-                 engine.setProperty('voice', voices[1].id)
+                engine.setProperty('voice', voices[1].id)
             elif language == 'fr':
-                 engine.setProperty('voice', voices[0].id)
+                engine.setProperty('voice', voices[0].id)
 
 
         elif "write" in query:
@@ -160,6 +182,20 @@ if __name__ == '__main__':
             document.add_paragraph('hello world im newton world')
             document.save('test.docx')
             os.startfile('test.docx')
+
+        elif "todo" in query:
+            isToDoExist = os.path.exists(path+'todo.xlsx')
+            if not isToDoExist:
+                workbook = Workbook()
+                spreadsheet = workbook.active
+                spreadsheet["A1"] = "todo"
+                spreadsheet["B1"] = "time"
+                spreadsheet["C1"] = "status"
+                workbook.save(filename="todo.xlsx")
+
+            speak("here\'s your todos for the day ")
+            show_todo()
+
         else:
             hide() #call for method
 
