@@ -21,4 +21,18 @@ def insert_todo(todo):
 
 def show_todo():
     data = pd.read_excel(path, sheet_name='Sheet')
+    data = data.loc[data['status'] == 'Pending']
+    print(data)
+
+
+def finish_todo(identifier):
+    workbook = load_workbook(filename=path)
+    spreadsheet = workbook.active
+    new_id = int(identifier) + 2
+    if spreadsheet["C"+str(new_id)].value is not None:
+        spreadsheet["C"+str(new_id)] = "Completed"
+    workbook.save(filename=path)
+
+def show_history():
+    data = pd.read_excel(path, sheet_name='Sheet')
     print(data)

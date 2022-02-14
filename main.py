@@ -33,6 +33,7 @@ def translateToFrench(text):
     translation = translator.translate(text, dest="fr")
     return translation.text
 
+
 def translateToEnglish(text):
     translator = Translator()
     translation = translator.translate(text, dest="en")
@@ -80,35 +81,34 @@ def takeCommand():
     return query
 
 
-def sendEmail(to, content):
+def sendEmail(to, subject, content):
     outlook = win32com.client.Dispatch("Outlook.Application")
     msg = outlook.CreateItem(0)
-    msg.To = "ibrahimbenhf@gmail.com"
-    msg.Subject = "my friend"
-    msg.Body = "hello, thank your."
+    msg.To = to
+    msg.Subject = subject
+    msg.Body = content
     msg.Send()
 
-def sendMeeting():
-    import win32com.client
+
+def sendMeeting(date, subject, ):
     outlook = win32com.client.Dispatch("Outlook.Application")
-    appt = outlook.CreateItem(1) # AppointmentItem
-    appt.Start = "2022-01-02 14:10" # yyyy-MM-dd hh:mm
+    appt = outlook.CreateItem(1)  # AppointmentItem
+    appt.Start = "2022-01-02 14:10"  # yyyy-MM-dd hh:mm
     appt.Subject = "Subject of the meeting"
-    appt.Duration = 60 # In minutes (60 Minutes)
+    appt.Duration = 60  # In minutes (60 Minutes)
     appt.Location = "Location Name"
-    appt.MeetingStatus = 1 # 1 - olMeeting; Changing the appointment to meeting. Only after changing the meeting status recipients can be added
-    appt.Recipients.Add("ibrahimbenhf@gmail.com") # Don't end ; as delimiter
+    appt.MeetingStatus = 1
+    appt.Recipients.Add("ibrahimbenhf@gmail.com")  # Don't end ; as delimiter
     appt.Save()
     appt.Send()
 
 
 if __name__ == '__main__':
 
-    path = os.getenv('APPDATA')+'/Vermera'
+    path = os.getenv('APPDATA') + '/Vermera'
     isExist = os.path.exists(path)
     if not isExist:
         os.makedirs(path)
-
 
     clear = lambda: os.system('cls')
 
@@ -128,16 +128,18 @@ if __name__ == '__main__':
             try:
                 speak("What should I say?")
                 content = takeCommand()
+                speak("what is the subject")
+                subject = takeCommand()
                 speak("who should i send to")
                 to = input()
-                sendEmail(to, content)
+                sendEmail(to, subject, content)
                 speak("Email has been sent !")
             except Exception as e:
                 print(e)
                 speak("I am not able to send this email")
 
         elif 'meeting' in query:
-            speak("meeting")
+            speak("meeting")  # meeting idea maybe abandoned
 
         elif 'exit' in query:
             speak("Thanks for giving me your time")
@@ -162,12 +164,12 @@ if __name__ == '__main__':
             print(file.read())
             speak(file.read(6))
 
-        #changing language command
+        # changing language command
         elif "change" in query:
             if language == 'fr':
-                language='en'
+                language = 'en'
             else:
-                language='fr'
+                language = 'fr'
             speak("Language Changed")
             if language == 'en':
                 engine.setProperty('voice', voices[1].id)
@@ -184,7 +186,7 @@ if __name__ == '__main__':
             os.startfile('test.docx')
 
         elif "todo" in query:
-            isToDoExist = os.path.exists(path+'todo.xlsx')
+            isToDoExist = os.path.exists(path + 'todo.xlsx')
             if not isToDoExist:
                 workbook = Workbook()
                 spreadsheet = workbook.active
@@ -197,5 +199,4 @@ if __name__ == '__main__':
             show_todo()
 
         else:
-            hide() #call for method
-
+            hide()  # call for method
