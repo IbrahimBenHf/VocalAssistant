@@ -9,7 +9,7 @@ import win32com.client
 from tensor import hide
 from openpyxl import Workbook
 
-from todo import show_todo
+from todo import show_todo, show_history, insert_todo, finish_todo
 
 language = 'en'
 
@@ -102,6 +102,15 @@ def sendMeeting(date, subject, ):
     appt.Save()
     appt.Send()
 
+def create_psd():
+    speak("PSD in creation")
+
+def create_pfr():
+    speak("pfr in creation")
+
+def create_test_plan():
+    speak("test plan in creation")
+
 
 if __name__ == '__main__':
 
@@ -145,11 +154,7 @@ if __name__ == '__main__':
             speak("Thanks for giving me your time")
             exit()
 
-        elif 'lock window' in query:
-            speak("locking the device")
-            ctypes.windll.user32.LockWorkStation()
-
-        elif "write a note" in query:
+        elif "note" in query:
             speak("What should i write, sir")
             note = takeCommand()
             file = open('vermera.txt', 'w')
@@ -185,7 +190,7 @@ if __name__ == '__main__':
             document.save('test.docx')
             os.startfile('test.docx')
 
-        elif "todo" in query:
+        elif "to do" in query:
             isToDoExist = os.path.exists(path + 'todo.xlsx')
             if not isToDoExist:
                 workbook = Workbook()
@@ -195,8 +200,46 @@ if __name__ == '__main__':
                 spreadsheet["C1"] = "status"
                 workbook.save(filename="todo.xlsx")
 
-            speak("here\'s your todos for the day ")
+            speak("here\'s your todos for the day")
             show_todo()
+            speak("do you want to add new todos for the day")
+            response = takeCommand()
+            if response == "yes":
+                speak("name of the todo")
+                todo = takeCommand()
+                insert_todo(todo)
+                speak("todo inserted")
+                show_todo()
+            speak("do you want to complete a todo")
+            response = takeCommand()
+            if response == "yes":
+                show_todo()
+                speak("what is the number of todo to complete")
+                number = takeCommand()
+                try:
+                    finish_todo(number)
+                except ValueError:
+                    speak("Invalid Number entered")
+                show_todo()
+            speak("do you want to see all todo history")
+            response = takeCommand()
+            if response == "yes":
+                show_history()
+
+        elif "document" in query:
+            speak("Do you want to create a PSD ?")
+            response = takeCommand()
+            if response == "yes":
+                create_psd()
+            speak("Do you want to create a PFR ?")
+            response = takeCommand()
+            if response == "yes":
+                create_pfr()
+            speak("Do you want to create a test plan ?")
+            response = takeCommand()
+            if response == "yes":
+                create_test_plan()
+
 
         else:
             hide()  # call for method

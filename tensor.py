@@ -15,5 +15,5 @@ import tensorflow as tf
 #testing
 
 def hide():
-    print('hey')
+    print('hide func')
 
