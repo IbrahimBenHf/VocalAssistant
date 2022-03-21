@@ -1,10 +1,8 @@
-import pyttsx3
 from googletrans import Translator
 import speech_recognition as sr
 from docx import Document
 import datetime
 import os
-import ctypes
 import win32com.client
 from tensor import hide
 from openpyxl import Workbook
@@ -14,12 +12,12 @@ from todo import show_todo, show_history, insert_todo, finish_todo
 
 language = 'en'
 
-engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
-if language == 'en':
-    engine.setProperty('voice', voices[1].id)
-elif language == 'fr':
-    engine.setProperty('voice', voices[0].id)
+# engine = pyttsx3.init('sapi5')
+# voices = engine.getProperty('voices')
+# if language == 'en':
+#     engine.setProperty('voice', voices[1].id)
+# elif language == 'fr':
+#     engine.setProperty('voice', voices[0].id)
 
 
 def speak(audio):
@@ -145,15 +143,16 @@ def bot_functions(query, language):
 
     # changing language command
     elif "change" in query:
-        if language == 'fr':
-            language = 'en'
-        else:
-            language = 'fr'
-        speak("Language Changed")
-        if language == 'en':
-            engine.setProperty('voice', voices[1].id)
-        elif language == 'fr':
-            engine.setProperty('voice', voices[0].id)
+        speak("change language")
+        # if language == 'fr':
+        #     language = 'en'
+        # else:
+        #     language = 'fr'
+        # speak("Language Changed")
+        # if language == 'en':
+        #     engine.setProperty('voice', voices[1].id)
+        # elif language == 'fr':
+        #     engine.setProperty('voice', voices[0].id)
 
     elif "test" in query:
         takeCommand()
