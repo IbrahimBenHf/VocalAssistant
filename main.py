@@ -9,7 +9,8 @@ from openpyxl import Workbook
 import streamlit as st
 from streamlit_chat import message as st_message
 from todo import show_todo, show_history, insert_todo, finish_todo
-
+from gtts import gTTS
+from playsound import playsound
 language = 'en'
 
 # engine = pyttsx3.init('sapi5')
@@ -23,7 +24,10 @@ language = 'en'
 def speak(audio):
     if language == 'fr':
         audio = translateToFrench(audio)
-   # engine.say(audio)
+    tts = gTTS(text=audio, lang='en')
+    tts.save("say.mp3")
+    playsound("say.mp3")
+    os.remove("say.mp3")
     st.session_state.history.append({"message": audio , "is_user": False, "avatar_style": "jdenticon"}) #bot message on chat
   #  engine.runAndWait()
 
@@ -43,15 +47,13 @@ def translateToEnglish(text):
 def wishMe():
     hour = int(datetime.datetime.now().hour)
     if hour >= 8 and hour < 12:
-        speak("Good Morning !")
+        speak("Good Morning ! How Can I help you?")
 
     elif hour >= 12 and hour < 18:
-        speak("Good Afternoon !")
+        speak("Good Afternoon ! How Can I help you?")
 
     else:
-        speak("Hey!")
-
-    speak("How Can I help you?")
+        speak("Hey! How Can I help you?")
 
 
 def takeCommand():
