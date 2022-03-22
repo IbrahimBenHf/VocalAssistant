@@ -3,7 +3,6 @@ import speech_recognition as sr
 from docx import Document
 import datetime
 import os
-import win32com.client
 from tensor import hide
 from openpyxl import Workbook
 import streamlit as st
@@ -84,26 +83,26 @@ def takeCommand():
     return query
 
 
-def sendEmail(to, subject, content):
-    outlook = win32com.client.Dispatch("Outlook.Application")
-    msg = outlook.CreateItem(0)
-    msg.To = to
-    msg.Subject = subject
-    msg.Body = content
-    msg.Send()
-
-
-def sendMeeting(date, subject, ):
-    outlook = win32com.client.Dispatch("Outlook.Application")
-    appt = outlook.CreateItem(1)  # AppointmentItem
-    appt.Start = "2022-01-02 14:10"  # yyyy-MM-dd hh:mm
-    appt.Subject = "Subject of the meeting"
-    appt.Duration = 60  # In minutes (60 Minutes)
-    appt.Location = "Location Name"
-    appt.MeetingStatus = 1
-    appt.Recipients.Add("ibrahimbenhf@gmail.com")  # Don't end ; as delimiter
-    appt.Save()
-    appt.Send()
+# def sendEmail(to, subject, content):
+#     outlook = win32com.client.Dispatch("Outlook.Application")
+#     msg = outlook.CreateItem(0)
+#     msg.To = to
+#     msg.Subject = subject
+#     msg.Body = content
+#     msg.Send()
+#
+#
+# def sendMeeting(date, subject, ):
+#     outlook = win32com.client.Dispatch("Outlook.Application")
+#     appt = outlook.CreateItem(1)  # AppointmentItem
+#     appt.Start = "2022-01-02 14:10"  # yyyy-MM-dd hh:mm
+#     appt.Subject = "Subject of the meeting"
+#     appt.Duration = 60  # In minutes (60 Minutes)
+#     appt.Location = "Location Name"
+#     appt.MeetingStatus = 1
+#     appt.Recipients.Add("ibrahimbenhf@gmail.com")  # Don't end ; as delimiter
+#     appt.Save()
+#     appt.Send()
 
 def create_psd():
     speak("PSD in creation")
@@ -130,7 +129,7 @@ def bot_functions(query, language):
             subject = takeCommand()
             speak("who should i send to")
             to = input()
-            sendEmail(to, subject, content)
+            #sendEmail(to, subject, content)
             speak("Email has been sent !")
         except Exception as e:
             print(e)
