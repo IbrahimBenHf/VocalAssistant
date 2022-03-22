@@ -18,7 +18,7 @@ language = 'en'
 #     engine.setProperty('voice', voices[1].id)
 # elif language == 'fr':
 #     engine.setProperty('voice', voices[0].id)
-
+#  engine.runAndWait()
 
 def speak(audio):
     if language == 'fr':
@@ -28,7 +28,7 @@ def speak(audio):
     playsound("say.mp3")
     os.remove("say.mp3")
     st.session_state.history.append({"message": audio , "is_user": False, "avatar_style": "jdenticon"}) #bot message on chat
-  #  engine.runAndWait()
+
 
 
 def translateToFrench(text):
@@ -231,10 +231,10 @@ def generate_answer():
 
 if __name__ == '__main__':
 
-    # path = os.getenv('APPDATA') + '/Vermera'
-    # isExist = os.path.exists(path)
-    # if not isExist:
-    #     os.makedirs(path)
+    path = os.getenv('APPDATA') + '/Vermera'
+    isExist = os.path.exists(path)
+    if not isExist:
+        os.makedirs(path)
     if "history" not in st.session_state:
         st.session_state.history = []
         wishMe()
