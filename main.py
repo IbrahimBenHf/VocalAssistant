@@ -231,10 +231,10 @@ def generate_answer():
 
 if __name__ == '__main__':
 
-    path = os.getenv('APPDATA') + '/Vermera'
-    isExist = os.path.exists(path)
-    if not isExist:
-        os.makedirs(path)
+    # path = os.getenv('APPDATA') + '/Vermera'
+    # isExist = os.path.exists(path)
+    # if not isExist:
+    #     os.makedirs(path)
     if "history" not in st.session_state:
         st.session_state.history = []
         wishMe()
