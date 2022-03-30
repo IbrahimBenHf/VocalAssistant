@@ -22,7 +22,7 @@ def insert_todo(todo):
 def show_todo():
     data = pd.read_excel(path, sheet_name='Sheet')
     data = data.loc[data['status'] == 'Pending']
-    return (data)
+    return data
 
 
 def finish_todo(identifier):
@@ -35,4 +35,4 @@ def finish_todo(identifier):
 
 def show_history():
     data = pd.read_excel(path, sheet_name='Sheet')
-    print(data)
+    return data
