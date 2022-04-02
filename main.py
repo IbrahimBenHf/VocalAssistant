@@ -9,7 +9,10 @@ from streamlit_chat import message as st_message
 from todo import show_todo, show_history, insert_todo, finish_todo
 from gtts import gTTS
 from playsound import playsound
-lang ='en'
+import getpass
+from openpyxl import load_workbook
+
+lang = 'en'
 
 
 def speak(audio):
@@ -28,13 +31,18 @@ def showtodo():
     df = show_todo()
     df = df.reset_index()
     for index, row in df.iterrows():
-        st.session_state.history.append({"message": str(index)+"- "+row['todo']+ " --|-- "+row['time'] , "is_user": False, "avatar_style": "jdenticon"})
+        st.session_state.history.append(
+            {"message": str(index) + "- " + row['todo'] + " --|-- " + row['time'], "is_user": False,
+             "avatar_style": "jdenticon"})
+
 
 def showhistory():
     df = show_history()
     df = df.reset_index()
     for index, row in df.iterrows():
-        st.session_state.history.append({"message": str(index)+"- "+row['todo'] + " --|-- "+row['status'] + " --|-- "+row['time'] , "is_user": False, "avatar_style": "jdenticon"})
+        st.session_state.history.append(
+            {"message": str(index) + "- " + row['todo'] + " --|-- " + row['status'] + " --|-- " + row['time'],
+             "is_user": False, "avatar_style": "jdenticon"})
 
 
 def change_language():
@@ -123,6 +131,30 @@ def modifyDoc(document, key, msg):
             paragraph.text = msg
 
 
+def modifyTableDoc(document, key, msg):
+    for table in document.tables:
+        data = []
+    keys = None
+    for i, row in enumerate(table.rows):
+        for cell in row.cells:
+            if key in cell.text:
+                cell.text = msg
+
+
+def fill_test_plan(spreadsheet, desc, status):
+    finished = True
+    i = 4
+    while (finished):
+        if spreadsheet["A" + str(i)].value is None:
+            spreadsheet["A" + str(i)] = "TSC-" + str(i - 3)
+            spreadsheet["B" + str(i)] = desc
+            spreadsheet["C" + str(i)] = status
+            finished = False
+            print(i)
+        else:
+            i = i + 1
+
+
 def addTitle(document, title):
     document.add_heading(title, 2)
 
@@ -134,10 +166,14 @@ def addDescription(document, desc):
 def create_psd():
     speak("PSD in creation")
     document = Document('PSD.docx')
-    speak("what do you want as main title?")
-    modifyDoc(document, "xmain titlex", takeCommand())
+    speak("what do you want as a title?")
+    modifyDoc(document, "xtitlex", takeCommand())
     from datetime import datetime
-    modifyDoc(document, "xdatex", datetime.today().strftime('%Y-%m-%d'))
+    today = datetime.today().strftime('%Y-%m-%d')
+    modifyDoc(document, "xdatex", today)
+    modifyTableDoc(document, "xdatex", today)
+    # usernames
+    modifyTableDoc(document, "xauthorx", getpass.getuser())
     speak("what is the client context?")
     modifyDoc(document, "xclient contextx", takeCommand())
     speak("what is the business context?")
@@ -163,10 +199,58 @@ def create_psd():
 
 def create_pfr():
     speak("pfr in creation")
+    document = Document('PFR.docx')
+    speak("what do you want as a title?")
+    modifyDoc(document, "xtitlex", takeCommand())
+    from datetime import datetime
+    today = datetime.today().strftime('%Y-%m-%d')
+    modifyDoc(document, "xdatex", today)
+    modifyTableDoc(document, "xdatex", today)
+    # usernames
+    modifyTableDoc(document, "xauthorx", getpass.getuser())
+    speak("what is the aim of the document?")
+    modifyDoc(document, "xaimx", takeCommand())
+    speak("describe the current behavior?")
+    modifyDoc(document, "xcurrent behaviorx", takeCommand())
+    speak("what is the proposed solution")
+    modifyDoc(document, "xsolutionx", takeCommand())
+    answer = "yes"
+    while (answer != "no"):
+        speak("do you want to add new feature description ?")
+        answer = takeCommand()
+        if (answer != "no"):
+            speak("what is the feature's name ?")
+            addTitle(document, takeCommand())
+            speak("what is the description for this feature ?")
+            addDescription(document, takeCommand())
+
+    speak("document is now saved on your desktop, i will open it now")
+    path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + '\\PFR.docx'
+    document.save(path)
+    os.startfile(path)
 
 
 def create_test_plan():
     speak("test plan in creation")
+    workbook = load_workbook(filename='plan.xlsx')
+    spreadsheet = workbook.active
+    speak("what is the title of the test?")
+    title = takeCommand()
+    spreadsheet["B1"] = title
+    testCase = True
+    while testCase:
+        speak("what is the description of the test case?")
+        desc = takeCommand()
+        speak("what is the actual status of this test case ?")
+        status = takeCommand()
+        fill_test_plan(spreadsheet, desc, status)
+        speak("do you want to add another test case ?")
+        answer = takeCommand()
+        if "no" in answer:
+            testCase = False
+    path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + '\\Test Plan -' + title + '.xlsx'
+    workbook.save(path)
+    os.startfile(path)
 
 
 def bot_functions(query):
