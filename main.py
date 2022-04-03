@@ -12,6 +12,7 @@ from playsound import playsound
 import getpass
 from openpyxl import load_workbook
 
+global lang
 lang = 'en'
 
 
@@ -43,15 +44,6 @@ def showhistory():
         st.session_state.history.append(
             {"message": str(index) + "- " + row['todo'] + " --|-- " + row['status'] + " --|-- " + row['time'],
              "is_user": False, "avatar_style": "jdenticon"})
-
-
-def change_language():
-    global lang
-    if lang == 'fr':
-        lang = 'en'
-    else:
-        lang = 'fr'
-    print(lang)
 
 
 def translateToFrench(text):
@@ -90,11 +82,9 @@ def takeCommand():
                 print("Recognizing...")
                 if lang == 'fr':
                     query = r.recognize_google(audio, language='fr')
-                    st.session_state.history.append({"message": query, "is_user": True, "avatar_style": "micah"})
-                    query = translateToEnglish(query)
                 else:
                     query = r.recognize_google(audio, language='en-in')
-                    st.session_state.history.append({"message": query, "is_user": True, "avatar_style": "micah"})
+                st.session_state.history.append({"message": query, "is_user": True, "avatar_style": "micah"})
                 print(f"User said: {query}\n")
             except Exception as e:
                 print(e)
@@ -278,15 +268,6 @@ def bot_functions(query):
     elif 'meeting' in query:
         speak("meeting")  # meeting idea maybe abandoned
 
-    elif 'exit' in query:
-        speak("Thanks for giving me your time")
-        exit()
-
-    # changing language command
-    elif "change" in query:
-        change_language()
-        speak("Language Changed")
-
     elif "translate" in query:
         speak(translateToEnglish(takeCommand()))
 
@@ -323,7 +304,71 @@ def bot_functions(query):
         create_test_plan()
 
     else:
-        speak("okay")  # call tensorflow model
+        speak(query)  # call tensorflow model
+
+
+def bot_functions_fr(query):
+    if query == None:
+        query = takeCommand().lower()
+
+    # All the commands said by user will be
+    # stored here in 'query' and will be
+    # converted to lower case for easily
+    # recognition of command
+    if 'mail' in query:
+        try:
+            speak("What should I say?")
+            content = takeCommand()
+            speak("what is the subject")
+            subject = takeCommand()
+            speak("who should i send to")
+            to = input()
+            # sendEmail(to, subject, content)
+            speak("Email has been sent !")
+        except Exception as e:
+            print(e)
+            speak("I am not able to send this email")
+
+    elif 'reunion' in query:
+        speak("meeting")  # meeting idea maybe abandoned
+
+    elif "traduire" in query:
+        speak(translateToEnglish(takeCommand()))
+
+    elif "mes tâches" in query:
+        speak("here\'s your to do for the day")
+        showtodo()
+
+    elif "ajoute tâche" in query:
+        speak("name of the to do")
+        todo = takeCommand()
+        insert_todo(todo)
+        speak("to do inserted")
+        showtodo()
+
+    elif "compléter tâche" in query:
+        showtodo()
+        speak("what is the number of to do to complete")
+        number = takeCommand()
+        try:
+            finish_todo(number)
+        except ValueError:
+            speak("Invalid Number entered")
+        showtodo()
+
+    elif "histoire tâche" in query:
+        speak("here's the to do history")
+        showhistory()
+
+    elif "document développement" in query:
+        create_psd()
+    elif "document client" in query:
+        create_pfr()
+    elif "plan de test" in query:
+        create_test_plan()
+
+    else:
+        speak(query)  # call tensorflow model
 
 
 def generate_answer():
@@ -332,9 +377,15 @@ def generate_answer():
     st.session_state.history.append({"message": user_message, "is_user": True, "avatar_style": "micah"})
     st.session_state["input_text"] = ""
     if user_message == "vermera":
-        bot_functions(takeCommand())
+        if lang == 'fr':
+            bot_functions_fr(takeCommand())
+        else:
+            bot_functions(takeCommand())
     else:
-        bot_functions(user_message)
+        if lang == 'fr':
+            bot_functions_fr(user_message)
+        else:
+            bot_functions(user_message)
 
 
 if __name__ == '__main__':
@@ -363,13 +414,16 @@ if __name__ == '__main__':
         st_message(chat['message'], chat['is_user'], chat['avatar_style'], None, str(msg_limit))  # unpacking
         msg_limit = msg_limit - 1
 
-    st.sidebar.markdown("# Commands")
-    st.sidebar.markdown("This app has a lot of differen commands : ")
-    st.sidebar.markdown("1 - Mail : to send a mail")
-    st.sidebar.markdown("2 - Meeting : to schedule a meeting")
-    st.sidebar.markdown("3 - To do : to manage todo's")
-    st.sidebar.markdown("4 - Document : to start generating a PSD, PFR or test plan document")
-    st.sidebar.markdown("5 - Translate : to start translation service.")
-
-# while True:
-#   bot_functions(None)
+    option = st.sidebar.selectbox("", ('English', 'Français'))
+    if option == 'English':
+        lang = 'en'
+        st.sidebar.markdown("# Commands")
+        st.sidebar.markdown("This app has a lot of differen commands : ")
+        st.sidebar.markdown("1 - Mail : to send a mail")
+        st.sidebar.markdown("2 - Meeting : to schedule a meeting")
+        st.sidebar.markdown("3 - To do : to manage todo's")
+        st.sidebar.markdown("4 - Document : to start generating a PSD, PFR or test plan document")
+        st.sidebar.markdown("5 - Translate : to start translation service.")
+    elif option == 'Français':
+        lang = 'fr'
+        st.sidebar.markdown("# Commande")
