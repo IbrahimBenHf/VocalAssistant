@@ -394,14 +394,14 @@ if __name__ == '__main__':
     isExist = os.path.exists(path)
     if not isExist:
         os.makedirs(path)
-    isToDoExist = os.path.exists(path + 'todo.xlsx')
+    isToDoExist = os.path.exists(path + '\\todo.xlsx')
     if not isToDoExist:
         workbook = Workbook()
         spreadsheet = workbook.active
         spreadsheet["A1"] = "todo"
         spreadsheet["B1"] = "time"
         spreadsheet["C1"] = "status"
-        workbook.save(filename="todo.xlsx")
+        workbook.save(filename=path + '\\todo.xlsx')
 
     if "history" not in st.session_state:
         st.session_state.history = []
