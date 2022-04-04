@@ -33,7 +33,7 @@ def showtodo():
     df = df.reset_index()
     for index, row in df.iterrows():
         st.session_state.history.append(
-            {"message": str(index) + "- " + row['todo'] + " --|-- " + row['time'], "is_user": False,
+            {"message": str(index) + "- " + row['todo'] + " --- " + row['time'], "is_user": False,
              "avatar_style": "jdenticon"})
 
 
@@ -101,19 +101,7 @@ def takeCommand():
 #     msg.Subject = subject
 #     msg.Body = content
 #     msg.Send()
-#
-#
-# def sendMeeting(date, subject, ):
-#     outlook = win32com.client.Dispatch("Outlook.Application")
-#     appt = outlook.CreateItem(1)  # AppointmentItem
-#     appt.Start = "2022-01-02 14:10"  # yyyy-MM-dd hh:mm
-#     appt.Subject = "Subject of the meeting"
-#     appt.Duration = 60  # In minutes (60 Minutes)
-#     appt.Location = "Location Name"
-#     appt.MeetingStatus = 1
-#     appt.Recipients.Add("ibrahimbenhf@gmail.com")  # Don't end ; as delimiter
-#     appt.Save()
-#     appt.Send()
+
 
 def modifyDoc(document, key, msg):
     for paragraph in document.paragraphs:
@@ -265,11 +253,8 @@ def bot_functions(query):
             print(e)
             speak("I am not able to send this email")
 
-    elif 'meeting' in query:
-        speak("meeting")  # meeting idea maybe abandoned
-
     elif "translate" in query:
-        speak(translateToEnglish(takeCommand()))
+        speak(translateToFrench(takeCommand()))
 
     elif "show to do" in query:
         speak("here\'s your to do for the day")
@@ -304,7 +289,7 @@ def bot_functions(query):
         create_test_plan()
 
     else:
-        speak(query)  # call tensorflow model
+        speak("The tensorflow model is not yet supported")  # call tensorflow model
 
 
 def bot_functions_fr(query):
@@ -329,24 +314,22 @@ def bot_functions_fr(query):
             print(e)
             speak("I am not able to send this email")
 
-    elif 'reunion' in query:
-        speak("meeting")  # meeting idea maybe abandoned
 
     elif "traduire" in query:
         speak(translateToEnglish(takeCommand()))
 
-    elif "mes tâches" in query:
+    elif ("mes tâches" or "mes taches") in query:
         speak("here\'s your to do for the day")
         showtodo()
 
-    elif "ajoute tâche" in query:
+    elif ("ajoute tâche"or "ajoute tache") in query:
         speak("name of the to do")
         todo = takeCommand()
         insert_todo(todo)
         speak("to do inserted")
         showtodo()
 
-    elif "compléter tâche" in query:
+    elif ("compléter tâche"or "compléter tache"or "compléter tache") in query:
         showtodo()
         speak("what is the number of to do to complete")
         number = takeCommand()
@@ -356,7 +339,7 @@ def bot_functions_fr(query):
             speak("Invalid Number entered")
         showtodo()
 
-    elif "histoire tâche" in query:
+    elif ("historique tâche" or "historique tache") in query:
         speak("here's the to do history")
         showhistory()
 
@@ -368,7 +351,7 @@ def bot_functions_fr(query):
         create_test_plan()
 
     else:
-        speak(query)  # call tensorflow model
+        speak("The tensorflow model is not yet supported")  # call tensorflow model
 
 
 def generate_answer():
@@ -418,12 +401,26 @@ if __name__ == '__main__':
     if option == 'English':
         lang = 'en'
         st.sidebar.markdown("# Commands")
-        st.sidebar.markdown("This app has a lot of differen commands : ")
-        st.sidebar.markdown("1 - Mail : to send a mail")
-        st.sidebar.markdown("2 - Meeting : to schedule a meeting")
-        st.sidebar.markdown("3 - To do : to manage todo's")
-        st.sidebar.markdown("4 - Document : to start generating a PSD, PFR or test plan document")
-        st.sidebar.markdown("5 - Translate : to start translation service.")
+        st.sidebar.markdown("This app has a lot of different commands : ")
+        st.sidebar.markdown("1 - Vermera : to use the microphone")
+        st.sidebar.markdown("2 - show to do : to show your to do\'s")
+        st.sidebar.markdown("3 - add to do : to add new to do")
+        st.sidebar.markdown("4 - complete to do : to complete a to do")
+        st.sidebar.markdown("5 - history to do : to show your to do\'s history")
+        st.sidebar.markdown("6 - translate : to translate from english to french")
+        st.sidebar.markdown("7 - developer document : to Create PSD.")
+        st.sidebar.markdown("8 - client document : to Create PFR.")
+        st.sidebar.markdown("9 - test document : to Create a test plan.")
     elif option == 'Français':
         lang = 'fr'
         st.sidebar.markdown("# Commande")
+        st.sidebar.markdown("Les commandes de l\'assistant vocale : ")
+        st.sidebar.markdown("1 - Vermera : pour utiliser le microphone")
+        st.sidebar.markdown("2 - mes taches : pour voir vos taches")
+        st.sidebar.markdown("3 - ajoute tache : pour ajouter une nouvelle tache")
+        st.sidebar.markdown("4 - compléter tache : pour completer une tache")
+        st.sidebar.markdown("5 - historique tache : pour voir l\'historique des taches")
+        st.sidebar.markdown("6 - traduire : traduire du français vers l'anglais")
+        st.sidebar.markdown("7 - document développement : créer PSD.")
+        st.sidebar.markdown("8 - document client : créer PFR.")
+        st.sidebar.markdown("9 - plan de test : créer un plan de test.")
