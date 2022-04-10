@@ -1,48 +1,93 @@
-import streamlit as st
-from streamlit_chat import message as st_message
+from tkinter import *
+import customtkinter  # <- import the CustomTkinter module
+from PIL import Image, ImageTk
+import tkinter.ttk as ttk
 
-if "history" not in st.session_state:
-    st.session_state.history = []
+BG_GRAY = "#000000"
+BG_COLOR = "#000000"
+MSG_ENTRY_COLOR = "#000000"
+TEXT_COLOR = "#EAECEE"
 
-st.title("Hello Chatbot")
-
-
-#streamlit chat
-def generate_answer():
-    user_message = st.session_state.input_text
-    message_bot = user_message+' bot'
-    st.session_state.history.append({"message": user_message, "is_user": True})
-    st.session_state.history.append({"message": message_bot, "is_user": False})
-    st.session_state["input_text"] = ""
-state = False
-def change_state(state):
-    if state:
-        st.write('Why hello there')
-    else:
-        st.write('Goodbye')
+FONT = "Miriam 11"
+FONT_BOLD = "Helvetica 13 bold"
 
 
-st.text_input("Talk to the bot", key="input_text", on_change=generate_answer)
-st.button("micro",on_click=change_state(state))
-st.write("Micro On", key='micro')
-st.image()
+class ChatApplication:
+
+    def __init__(self):
+        self.window = customtkinter.CTk()
+        self._setup_main_window()
+
+    def run(self):
+        self.window.mainloop()
+
+    def _setup_main_window(self):
+        self.window.title("Vermera Virtual Assistant")
+        self.window.resizable(width=False, height=False)
+        self.window.configure(width=600, height=550, bg=BG_COLOR)
+
+        # head label
+        head_label = customtkinter.CTkLabel(self.window, bg=BG_COLOR, fg=TEXT_COLOR,text_font=FONT_BOLD,text="VERMEG", pady=10)
+        head_label.place(relwidth=1)
+
+        # text widget
+        self.text_widget = Text(self.window, width=20, height=2, bg=BG_COLOR, fg=TEXT_COLOR,
+                                font=FONT)
+        self.text_widget.place(relheight=0.88, relwidth=1, rely=0.1)
+        self.text_widget.configure(cursor="arrow", state=DISABLED)
+
+        # scroll bar
+        scrollbar = Scrollbar(self.text_widget)
+        scrollbar.place(relheight=1, relx=0.974)
+        scrollbar.configure(command=self.text_widget.yview)
+
+        # bottom label
+        bottom_label = Label(self.window, bg=BG_GRAY, height=40)
+        bottom_label.place(relwidth=1, rely=0.9)
+
+        # message entry box
+        self.msg_entry = customtkinter.CTkEntry(bottom_label, bg=MSG_ENTRY_COLOR, fg=TEXT_COLOR)
+        self.msg_entry.place(relwidth=0.74, relheight=0.05, rely=0.008, relx=0.011)
+        self.msg_entry.focus()
+        self.msg_entry.bind("<Return>", self._on_enter_pressed)
+
+        # send button
+        send_image = ImageTk.PhotoImage(Image.open("send.png").resize((20, 20), Image.ANTIALIAS))
+        send_button = customtkinter.CTkButton(master=bottom_label, image=send_image, text="", width=50, height=50,
+                                              corner_radius=10, fg_color="gray10", hover_color="gray25",
+                                              command=lambda: self._on_enter_pressed(None))
+
+        send_button.place(relx=0.76, rely=0.008, relheight=0.05, relwidth=0.11)
+
+        micro_image = ImageTk.PhotoImage(Image.open("micro.png").resize((20, 20), Image.ANTIALIAS))
+        micro_button = customtkinter.CTkButton(master=bottom_label, image=micro_image, text="", width=50, height=50,
+                                               corner_radius=10, fg_color="#f54251", hover_color="#ed5562",
+                                               command=lambda: self._on_enter_pressed(None))
+
+        micro_button.place(relx=0.88, rely=0.008, relheight=0.05, relwidth=0.11)
+
+    def _on_enter_pressed(self, event):
+        msg = self.msg_entry.get()
+        self._insert_message(msg, "Vermera")
+
+    def _insert_message(self, msg, sender):
+        if not msg:
+            return
+
+        self.msg_entry.delete(0, END)
+
+        # Use created style in this frame
+        # frame = customtkinter.CTkFrame(self.text_widget,width=200,height=40, )
+        # frame.configure(fg_color='#428069',corner_radius=20)
+
+        label_user = customtkinter.CTkLabel(master=self.text_widget, text=msg, fg_color="#6677d9", width=150, height=29,
+                                       corner_radius=20, text_font=FONT)
+        label_user.pack(padx=20, pady=5, anchor=E)
+        label = customtkinter.CTkLabel(master=self.text_widget, text=msg, fg_color="#17215e", width=150, height=29,
+                                       corner_radius=20, text_font=FONT)
+        label.pack(padx=5, pady=5, anchor=W)
 
 
-
-
-msg_limit = 10000
-for chat in st.session_state.history:
-    st_message(chat['message'], chat['is_user'],None,None,str(msg_limit))  # unpacking
-    msg_limit=msg_limit-1
-
-
-st.sidebar.markdown("# About the project")
-st.sidebar.markdown("An end to end project to recognize facial emotions of each customer. The aim of this project is to analyze data collected from live stream cameras capturing the agency's cutomers.")
-st.sidebar.markdown("This app requires three IP cameras connected to the same network, and some url configurations.")
-st.sidebar.markdown("# Our approach")
-st.sidebar.markdown("The whole application is devided into three main steps : ")
-st.sidebar.markdown("1 - Capture the entering customer and his emotion")
-st.sidebar.markdown("2 - Save all cutomer's emotions during the processing operation in the agency's window")
-st.sidebar.markdown("3 - Capture the exiting customer, face re-identification, exiting emotion and elapsed time")
-st.sidebar.markdown("# Choose an App to run")
-option = st.sidebar.selectbox("", ('--  No selected app  --','Enter App','Window App','Exit App'))
+if __name__ == "__main__":
+    app = ChatApplication()
+    app.run()
