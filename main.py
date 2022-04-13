@@ -4,16 +4,59 @@ from docx import Document
 import datetime
 import os
 from openpyxl import Workbook
-import streamlit as st
-from streamlit_chat import message as st_message
 from todo import show_todo, show_history, insert_todo, finish_todo
 from gtts import gTTS
 from playsound import playsound
 import getpass
 from openpyxl import load_workbook
-
+from tkinter import *
+import customtkinter  # <- import the CustomTkinter module
+from PIL import Image, ImageTk
 global lang
+
 lang = 'en'
+window = customtkinter.CTk()
+BG_GRAY = "#000000"
+BG_COLOR = "#000000"
+MSG_ENTRY_COLOR = "#000000"
+TEXT_COLOR = "#EAECEE"
+
+FONT = "Miriam 11"
+FONT_BOLD = "Helvetica 13 bold"
+window.title("Vermera Virtual Assistant")
+window.resizable(width=False, height=False)
+window.configure(width=600, height=550, bg=BG_COLOR)
+# head label
+head_label = customtkinter.CTkLabel(window, bg=BG_COLOR, fg=TEXT_COLOR,text_font=FONT_BOLD,text="VERMEG", pady=10)
+head_label.place(relwidth=1)
+# text widget
+text_widget = Text(window, width=20, height=2, bg=BG_COLOR, fg=TEXT_COLOR,
+                   font=FONT)
+text_widget.place(relheight=0.88, relwidth=1, rely=0.1)
+text_widget.configure(cursor="arrow", state=DISABLED)
+# scroll bar
+scrollbar = Scrollbar(text_widget)
+scrollbar.place(relheight=1, relx=0.974)
+scrollbar.configure(command=text_widget.yview)
+# bottom label
+bottom_label = Label(window, bg=BG_GRAY, height=40)
+bottom_label.place(relwidth=1, rely=0.9)
+# message entry box
+msg_entry = customtkinter.CTkEntry(bottom_label, bg=MSG_ENTRY_COLOR, fg=TEXT_COLOR)
+msg_entry.place(relwidth=0.74, relheight=0.05, rely=0.008, relx=0.011)
+msg_entry.focus()
+# msg_entry.bind("<Return>", _on_enter_pressed)
+# send button
+send_image = ImageTk.PhotoImage(Image.open("send.png").resize((20, 20), Image.ANTIALIAS))
+send_button = customtkinter.CTkButton(master=bottom_label, image=send_image, text="", width=50, height=50,
+                                      corner_radius=10, fg_color="gray10", hover_color="gray25",
+                                      command=lambda: _on_enter_pressed(msg_entry,text_widget))
+send_button.place(relx=0.76, rely=0.008, relheight=0.05, relwidth=0.11)
+micro_image = ImageTk.PhotoImage(Image.open("micro.png").resize((20, 20), Image.ANTIALIAS))
+micro_button = customtkinter.CTkButton(master=bottom_label, image=micro_image, text="", width=50, height=50,
+                                       corner_radius=10, fg_color="#f54251", hover_color="#ed5562",
+                                       command=lambda: micro_on(text_widget))
+micro_button.place(relx=0.88, rely=0.008, relheight=0.05, relwidth=0.11)
 
 
 def speak(audio):
@@ -24,26 +67,23 @@ def speak(audio):
     tts.save("say.mp3")
     playsound("say.mp3")
     os.remove("say.mp3")
-    st.session_state.history.append(
-        {"message": audio, "is_user": False, "avatar_style": "jdenticon"})
-
+    label = customtkinter.CTkLabel(master=text_widget, text=audio, fg_color="#17215e", width=150, height=29,
+                                   corner_radius=20, text_font=FONT)
+    label.pack(padx=5, pady=5, anchor=W)
 
 def showtodo():
     df = show_todo()
     df = df.reset_index()
     for index, row in df.iterrows():
-        st.session_state.history.append(
-            {"message": str(index) + "- " + row['todo'] + " --- " + row['time'], "is_user": False,
-             "avatar_style": "jdenticon"})
+        print("ok")
+      #  st.session_state.history.append({"message": str(index) + "- " + row['todo'] + " --- " + row['time'], "is_user": False, "avatar_style": "jdenticon"})
 
 
 def showhistory():
     df = show_history()
     df = df.reset_index()
     for index, row in df.iterrows():
-        st.session_state.history.append(
-            {"message": str(index) + "- " + row['todo'] + " --|-- " + row['status'] + " --|-- " + row['time'],
-             "is_user": False, "avatar_style": "jdenticon"})
+        print("ok")
 
 
 def translateToFrench(text):
@@ -84,7 +124,6 @@ def takeCommand():
                     query = r.recognize_google(audio, language='fr')
                 else:
                     query = r.recognize_google(audio, language='en-in')
-                st.session_state.history.append({"message": query, "is_user": True, "avatar_style": "micah"})
                 print(f"User said: {query}\n")
             except Exception as e:
                 print(e)
@@ -349,27 +388,44 @@ def bot_functions_fr(query):
         create_pfr()
     elif "plan de test" in query:
         create_test_plan()
-
+    elif "french":
+        lang='en'
+        speak("Language changed to french")  # call tensorflow model
     else:
         speak("The tensorflow model is not yet supported")  # call tensorflow model
 
 
-def generate_answer():
-    user_message = st.session_state.input_text
-    user_message = user_message.lower()
-    st.session_state.history.append({"message": user_message, "is_user": True, "avatar_style": "micah"})
-    st.session_state["input_text"] = ""
-    if user_message == "vermera":
-        if lang == 'fr':
-            bot_functions_fr(takeCommand())
-        else:
-            bot_functions(takeCommand())
+def generate_answer(msg):
+    if lang == 'fr':
+        bot_functions_fr(msg)
     else:
-        if lang == 'fr':
-            bot_functions_fr(user_message)
-        else:
-            bot_functions(user_message)
+        bot_functions(msg)
 
+
+
+
+def run():
+    window.mainloop()
+
+
+def micro_on(text_widget):
+    msg = takeCommand()
+    _insert_message(msg, text_widget)
+
+def _on_enter_pressed(msg_entry, text_widget):
+    msg = msg_entry.get()
+    msg_entry.delete(0, END)
+    _insert_message(msg, text_widget)
+def _insert_message(msg, text_widget):
+    if not msg:
+        return
+    label_user = customtkinter.CTkLabel(master=text_widget, text=msg, fg_color="#6677d9", width=100, height=29,
+                                        corner_radius=20, text_font=FONT)
+    label_user.pack(padx=20, pady=5, anchor=E)
+    generate_answer(msg)
+    #label = customtkinter.CTkLabel(master=text_widget, text=generate_answer(msg), fg_color="#17215e", width=150, height=29,
+    #                               corner_radius=20, text_font=FONT)
+    #label.pack(padx=5, pady=5, anchor=W)
 
 if __name__ == '__main__':
 
@@ -385,42 +441,5 @@ if __name__ == '__main__':
         spreadsheet["B1"] = "time"
         spreadsheet["C1"] = "status"
         workbook.save(filename=path + '\\todo.xlsx')
+    run()
 
-    if "history" not in st.session_state:
-        st.session_state.history = []
-        wishMe()
-
-    st.title("Vermera Virtual Assistant")
-    msg_limit = 10000
-    st.text_input("Talk to the bot", key="input_text", on_change=generate_answer)
-    for chat in reversed(st.session_state.history):
-        st_message(chat['message'], chat['is_user'], chat['avatar_style'], None, str(msg_limit))  # unpacking
-        msg_limit = msg_limit - 1
-
-    option = st.sidebar.selectbox("", ('English', 'Français'))
-    if option == 'English':
-        lang = 'en'
-        st.sidebar.markdown("# Commands")
-        st.sidebar.markdown("This app has a lot of different commands : ")
-        st.sidebar.markdown("1 - Vermera : to use the microphone")
-        st.sidebar.markdown("2 - show to do : to show your to do\'s")
-        st.sidebar.markdown("3 - add to do : to add new to do")
-        st.sidebar.markdown("4 - complete to do : to complete a to do")
-        st.sidebar.markdown("5 - history to do : to show your to do\'s history")
-        st.sidebar.markdown("6 - translate : to translate from english to french")
-        st.sidebar.markdown("7 - developer document : to Create PSD.")
-        st.sidebar.markdown("8 - client document : to Create PFR.")
-        st.sidebar.markdown("9 - test document : to Create a test plan.")
-    elif option == 'Français':
-        lang = 'fr'
-        st.sidebar.markdown("# Commande")
-        st.sidebar.markdown("Les commandes de l\'assistant vocale : ")
-        st.sidebar.markdown("1 - Vermera : pour utiliser le microphone")
-        st.sidebar.markdown("2 - mes taches : pour voir vos taches")
-        st.sidebar.markdown("3 - ajoute tache : pour ajouter une nouvelle tache")
-        st.sidebar.markdown("4 - compléter tache : pour completer une tache")
-        st.sidebar.markdown("5 - historique tache : pour voir l\'historique des taches")
-        st.sidebar.markdown("6 - traduire : traduire du français vers l'anglais")
-        st.sidebar.markdown("7 - document développement : créer PSD.")
-        st.sidebar.markdown("8 - document client : créer PFR.")
-        st.sidebar.markdown("9 - plan de test : créer un plan de test.")

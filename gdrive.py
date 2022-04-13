@@ -80,7 +80,7 @@ class ChatApplication:
         # frame = customtkinter.CTkFrame(self.text_widget,width=200,height=40, )
         # frame.configure(fg_color='#428069',corner_radius=20)
 
-        label_user = customtkinter.CTkLabel(master=self.text_widget, text=msg, fg_color="#6677d9", width=150, height=29,
+        label_user = customtkinter.CTkLabel(master=self.text_widget, text=msg, fg_color="#6677d9", width=100, height=29,
                                        corner_radius=20, text_font=FONT)
         label_user.pack(padx=20, pady=5, anchor=E)
         label = customtkinter.CTkLabel(master=self.text_widget, text=msg, fg_color="#17215e", width=150, height=29,
