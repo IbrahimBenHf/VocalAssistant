@@ -65,6 +65,7 @@ def wishMe():
 
     else:
         speak("Hey ! How Can I help you?")
+    speak("please enter your vermeg mail before continuing")
 
 
 def takeCommand():
@@ -143,7 +144,7 @@ def addDescription(document, desc):
 
 def create_psd():
     speak("PSD in creation")
-    document = Document('PSD.docx')
+    document = Document('utils/PSD.docx')
     speak("what do you want as a title?")
     modifyDoc(document, "xtitlex", takeCommand())
     from datetime import datetime
@@ -177,7 +178,7 @@ def create_psd():
 
 def create_pfr():
     speak("pfr in creation")
-    document = Document('PFR.docx')
+    document = Document('utils/PFR.docx')
     speak("what do you want as a title?")
     modifyDoc(document, "xtitlex", takeCommand())
     from datetime import datetime
@@ -210,7 +211,7 @@ def create_pfr():
 
 def create_test_plan():
     speak("test plan in creation")
-    workbook = load_workbook(filename='plan.xlsx')
+    workbook = load_workbook(filename='utils/plan.xlsx')
     spreadsheet = workbook.active
     speak("what is the title of the test?")
     title = takeCommand()
@@ -329,7 +330,7 @@ def bot_functions_fr(query):
         speak("to do inserted")
         showtodo()
 
-    elif ("compléter tâche"or "compléter tache"or "compléter tache") in query:
+    elif ("compléter tâche"or "compléter tache"or "completer tache") in query:
         showtodo()
         speak("what is the number of to do to complete")
         number = takeCommand()
@@ -396,7 +397,7 @@ if __name__ == '__main__':
     for chat in reversed(st.session_state.history):
         st_message(chat['message'], chat['is_user'], chat['avatar_style'], None, str(msg_limit))  # unpacking
         msg_limit = msg_limit - 1
-
+    mail = st.sidebar.text_input("Vermeg mail :", key="mail_input")
     option = st.sidebar.selectbox("", ('English', 'Français'))
     if option == 'English':
         lang = 'en'
@@ -424,3 +425,4 @@ if __name__ == '__main__':
         st.sidebar.markdown("7 - document développement : créer PSD.")
         st.sidebar.markdown("8 - document client : créer PFR.")
         st.sidebar.markdown("9 - plan de test : créer un plan de test.")
+    print(mail)
