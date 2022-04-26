@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 # excel path
-path = os.getenv('APPDATA') + '/vermera/todo.xlsx'
+path = 'todo.xlsx'
 
 
 def insert_todo(todo):

@@ -15,6 +15,9 @@ from openpyxl import load_workbook
 global lang
 lang = 'en'
 
+global mail
+mail = ''
+
 
 def speak(audio):
     print(lang)
@@ -374,18 +377,14 @@ def generate_answer():
 
 if __name__ == '__main__':
 
-    path = os.getenv('APPDATA') + '/Vermera'
-    isExist = os.path.exists(path)
-    if not isExist:
-        os.makedirs(path)
-    isToDoExist = os.path.exists(path + '\\todo.xlsx')
+    isToDoExist = os.path.exists('todo.xlsx')
     if not isToDoExist:
         workbook = Workbook()
         spreadsheet = workbook.active
         spreadsheet["A1"] = "todo"
         spreadsheet["B1"] = "time"
         spreadsheet["C1"] = "status"
-        workbook.save(filename=path + '\\todo.xlsx')
+        workbook.save(filename='todo.xlsx')
 
     if "history" not in st.session_state:
         st.session_state.history = []

@@ -1,6 +1,4 @@
+import streamlit as st
 
 
-def hide():
-    print('hide func')
-
-
+st.title("Hello World!")
