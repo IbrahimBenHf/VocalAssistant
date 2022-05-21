@@ -1,5 +1,4 @@
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
@@ -8,20 +7,26 @@ body {
     font-family: 'Nunito', sans-serif;
     font-weight: 400;
     font-size: 100%;
+    text-align: center;
+}
+form{
+
+    display: inline-block;
+
 }
 
 *, html {
-    --primaryGradient: linear-gradient(93.12deg, #581B98 0.52%, #9C1DE7 100%);
-    --secondaryGradient: linear-gradient(268.91deg, #581B98 -2.14%, #9C1DE7 99.69%);
+    --primaryGradient: linear-gradient(93.12deg, #72000f 0.52%, #000000 100%);
+    --secondaryGradient: linear-gradient(268.91deg, #72000f -2.14%, #000000 99.69%);
     --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
     --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
-    --primary: #581B98;
+    --primary: #72000f;
 }
 html {
     height: 100%;
 }
 body {
-    background-image: linear-gradient(to bottom right, #000000, #72000f, rgb(147, 0, 19));
+    background-image: linear-gradient(to bottom right, #000000, #72000f, rgb(167, 0, 19));
     /*background-image: linear-gradient(to bottom right, #0033CC, #FF77CC, rgb(255, 122, 89)); */
 }
 /* CHATBOX
@@ -36,7 +41,7 @@ body {
 .chatbox__support {
     display: flex;
     flex-direction: column;
-    background: #eee;
+    background: #600000;
     width: 300px;
     height: 350px;
     z-index: -123456;
@@ -75,7 +80,7 @@ body {
 
 
 input[type=email] {
-    width: 30%;
+    width: 500px;
     padding: 12px 20px;
     margin: 8px;
     border: 1px solid #ccc;
@@ -83,7 +88,7 @@ input[type=email] {
     box-sizing: border-box;
 }
 select{
-    width: 15%;
+    width: 150px;
     padding: 12px 20px;
     margin: 8px;
     border: 1px solid #ccc;

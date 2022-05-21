@@ -75,7 +75,7 @@ class Chatbox{
         })
 
         const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'en'
+        recognition.lang = this.getLanguage();
         recognition.continuous = true;
         recognition.interimResults = true;
         recognition.onresult = function (event) {
@@ -103,7 +103,7 @@ class Chatbox{
 
     speak(text){
         let utter = new SpeechSynthesisUtterance();
-        utter.lang = 'en';
+        utter.lang = this.getLanguage();
         utter.text = text;
         utter.volume = 0.5;
         window.speechSynthesis.speak(utter);
