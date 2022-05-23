@@ -12,7 +12,7 @@ def showtodo(mail):
     df = show_todo(mail)
     df = df.reset_index()
     for index, row in df.iterrows():
-        todo = todo + str(index) + "- " + row['todo'] + " --- " + row['time'] + "      \n"
+        todo = todo + str(index) + " - " + row['todo'] + ";"
     return todo
 
 
@@ -21,7 +21,7 @@ def showhistory(mail):
     df = show_history(mail)
     df = df.reset_index()
     for index, row in df.iterrows():
-        todo = todo + str(index) + "- " + row['todo'] + " --- " + row['time'] + "\n"
+        todo = todo + row['todo'] + " \"" + row['status'] + "\" ;"
     return todo
 
 

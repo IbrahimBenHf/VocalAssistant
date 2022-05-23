@@ -44,9 +44,12 @@ class Chatbox{
                 })
                     .then(r=>r.json())
                     .then(r=>{
-                        let msg2 = {name : "Bot", message:r.answer};
-                        this.messages.push(msg2);
-                        this.speak(msg2.message);
+                        var arr = r.answer.split(';');
+                        for (let i = 0; i < arr.length; i++) {
+                            let msg2 = {name : "Bot", message:arr[i]};
+                            this.messages.push(msg2);
+                            this.speak(msg2.message);
+                        }
                         this.updateChatText(chatbox)
                         textField.value = ''
                     }).catch((error)=>{
@@ -56,22 +59,11 @@ class Chatbox{
                 });
                 final_transcript = '';
             } else {
+                recognition.lang = this.getLanguage();
                 button.style['animation-name'] = 'flash';
                 button.innerText = 'Stop';
                 recognition.start();
             }
-        })
-
-        const button1 = document.getElementById('button1');
-        button1.addEventListener('click', () => {
-            var e = document.getElementById("language");
-            var strUser = e.value;
-            console.log(strUser);
-
-            var x = document.getElementById("mail");
-            var xx = x.value;
-            console.log(xx);
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Bonjour'));
         })
 
         const recognition = new webkitSpeechRecognition();
@@ -130,8 +122,13 @@ class Chatbox{
         })
             .then(r=>r.json())
             .then(r=>{
-                let msg2 = {name : "Bot", message:r.answer};
-                this.messages.push(msg2);
+                var arr = r.answer.split(';');
+                console.log(arr)
+                for (let i = 0; i < arr.length; i++) {
+                    let msg2 = {name : "Bot", message:arr[i]};
+                    this.messages.push(msg2);
+                    this.speak(msg2.message);
+                }
                 this.updateChatText(chatbox)
                 textField.value = ''
             }).catch((error)=>{

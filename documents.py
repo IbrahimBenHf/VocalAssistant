@@ -164,9 +164,10 @@ def create_test_plan(msg, question, mail):
 
 
 def traduireEnAnglais(text):
-    translator = Translator()
-    translation = translator.translate(text, dest="en")
-    return translation.text
+    if text != "":
+        translator = Translator()
+        translation = translator.translate(text, dest="en")
+        return translation.text
 
 
 def create_psd_fr(message, question, mail):

@@ -12,7 +12,11 @@ def showtodo(mail):
     df = show_todo(mail)
     df = df.reset_index()
     for index, row in df.iterrows():
-        todo = todo + str(index) + "- " + row['todo'] + " --- " + row['time'] + "      \n"
+        if todo == "":
+            todo = todo + str(index) + " - " + row['todo']
+        else:
+            todo = todo + ";" + str(index) + " - " + row['todo']
+    print(todo)
     return todo
 
 
@@ -21,7 +25,10 @@ def showhistory(mail):
     df = show_history(mail)
     df = df.reset_index()
     for index, row in df.iterrows():
-        todo = todo + str(index) + "- " + row['todo'] + " --- " + row['time'] + "\n"
+        if todo == "":
+            todo = todo + row['todo'] + " \"" + row['status'] + "\""
+        else:
+            todo = todo + ";" + row['todo'] + " \"" + row['status'] + "\""
     return todo
 
 
@@ -29,7 +36,6 @@ def translateToFrench(text):
     translator = Translator()
     translation = translator.translate(text, dest="fr")
     return translation.text
-
 
 
 def takeCommand():
@@ -51,6 +57,8 @@ def add_to_do(msg, question, mail):
     if question == "what is the to do to add?":
         insert_todo(msg, mail)
         return "To do added successfully."
+
+
 def complete_to_do(msg, question):
     if question == "what is the number of to do to complete?":
         try:
@@ -79,7 +87,7 @@ def bot_functions(query, mail):
 
     elif "history to do" in query:
         return showhistory(mail)
-    elif ("psd" in query) or ("developer document" in query):
+    elif ("psd" or "developer document") in query:
         document = Document('utils/PSD.docx')
         document.save(mail + "PSD.docx")
         return "PSD in creation, what do you want as a title?"
@@ -113,7 +121,6 @@ def generate_answer(msg, mail, question):
         return complete_to_do(msg, question)
     else:
         return bot_functions(msg.lower(), mail)
-
 
 # if option == 'English':
 #     lang = 'en'
