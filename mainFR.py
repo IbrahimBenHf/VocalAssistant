@@ -87,33 +87,40 @@ def generate_answer_fr(msg, mail, question):
 
 
 def bot_functions_fr(query, mail):
-    if 'mail' in query:
+    if check_keyword(query, ['mail', 'email', 'courriel']):
         return "Que devrais-je écrire?"
-    elif "traduire" in query:
+    elif check_keyword(query, ['traduire', 'anglais']):
         return "tu veux traduire quoi ?"
 
-    elif ("mes tâches" or "mes taches") in query:
+    elif check_keyword(query, ['mes tâches', 'mes taches']):
         return showtodo(mail)
 
-    elif ("ajoute tâche" or "ajoute tache") in query:
+    elif check_keyword(query, ['ajoute tache', 'ajoute tâche', 'nouvelle tache', 'nouvelle tâche']):
         return "quelle est la tâche à ajouter?"
 
-    elif ("compléter tâche" or "compléter tache" or "completer tache") in query:
+    elif check_keyword(query, ['completer tache', 'compléter tache', 'compléter tâche']):
         return "quel est le numéro de la tâche à accomplir?"
 
-    elif ("historique tâche" or "historique tache") in query:
+    elif check_keyword(query, ['historique tâche', 'historique tache']):
         return showhistory(mail)
-    elif "document développement" in query:
+    elif check_keyword(query, ['psd', 'document dev', 'document de développement']):
         document = Document('utils/PSD.docx')
         document.save(mail + "PSD.docx")
         return "PSD en création, tu veux quoi comme titre ?"
-    elif "document client" in query:
+    elif check_keyword(query, ['pfr', 'document client']):
         document = Document('utils/PFR.docx')
         document.save(mail + "PFR.docx")
         return "PFR en création, tu veux quoi comme titre ?"
-    elif "plan de test" in query:
+    elif check_keyword(query, ['plan de test', 'test']):
         workbook = load_workbook(filename='utils/plan.xlsx')
         workbook.save(mail + "plan.xlsx")
         return "plan de test en création, quel est le titre du test ?"
     else:
         return "model_fr"
+
+
+def check_keyword(query, keywords):
+    for key in keywords:
+        if key in query:
+            return True
+    return False

@@ -23,6 +23,14 @@ h1 {
 
 }
 
+h4 {
+    text-align: left;
+    font-size:15px;
+    align-self: flex-end;
+    color: white;
+
+}
+
 *, html {
     --primaryGradient: linear-gradient(93.12deg, #72000f 0.52%, #000000 100%);
     --secondaryGradient: linear-gradient(268.91deg, #72000f -2.14%, #000000 99.69%);

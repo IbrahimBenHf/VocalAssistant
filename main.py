@@ -33,9 +33,10 @@ def showhistory(mail):
 
 
 def translateToFrench(text):
-    translator = Translator()
-    translation = translator.translate(text, dest="fr")
-    return translation.text
+    if text != "":
+        translator = Translator()
+        translation = translator.translate(text, dest="fr")
+        return translation.text
 
 
 def takeCommand():
@@ -70,32 +71,32 @@ def complete_to_do(msg, question):
 
 
 def bot_functions(query, mail):
-    if 'mail' in query:
+    if check_keyword(query, ['mail', 'email']):
         return "What should I write?"
 
-    elif "translate" in query:
+    elif check_keyword(query, ['translate', 'french']):
         return "what do you want to translate?"
 
-    elif "show to do" in query:
+    elif check_keyword(query, ['show to do', 'show tasks']):
         return showtodo(mail)
 
-    elif "add to do" in query:
+    elif check_keyword(query, ['add to do', 'add tasks']):
         return "what is the to do to add?"
 
-    elif "complete to do" in query:
+    elif check_keyword(query, ['complete to do', 'complete tasks']):
         return "what is the number of to do to complete?"
 
-    elif "history to do" in query:
+    elif check_keyword(query, ['all to do', 'all tasks']):
         return showhistory(mail)
-    elif ("psd" or "developer document") in query:
+    elif check_keyword(query, ['psd', 'developer document']):
         document = Document('utils/PSD.docx')
         document.save(mail + "PSD.docx")
         return "PSD in creation, what do you want as a title?"
-    elif "client document" in query:
+    elif check_keyword(query, ['pfr', 'client document']):
         document = Document('utils/PFR.docx')
         document.save(mail + "PFR.docx")
         return "PFR in creation, what do you want as a title?"
-    elif "test document" in query:
+    elif check_keyword(query, ['test plan', 'test document']):
         workbook = load_workbook(filename='utils/plan.xlsx')
         workbook.save(mail + "plan.xlsx")
         return "test plan in creation, what is the title of the test?"
@@ -121,6 +122,13 @@ def generate_answer(msg, mail, question):
         return complete_to_do(msg, question)
     else:
         return bot_functions(msg.lower(), mail)
+
+
+def check_keyword(query, keywords):
+    for key in keywords:
+        if key in query:
+            return True
+    return False
 
 # if option == 'English':
 #     lang = 'en'
