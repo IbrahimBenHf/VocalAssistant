@@ -21,9 +21,9 @@ def predict():
     lang = request.get_json().get("language")
     mail = request.get_json().get("mail")
     question = request.get_json().get("question")
-    # if "@vermeg.com" not in mail:
-    #     message = {"answer": "Vermeg mail required to continue!"}
-    #     return jsonify(message)
+    if "@vermeg.com" not in mail:
+        message = {"answer": " mail required to continue!"}
+        return jsonify(message)
     if lang == "en":
         response = generate_answer(text, mail,question)
     else:

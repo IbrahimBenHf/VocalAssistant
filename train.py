@@ -24,13 +24,12 @@ for intent in intents['intents']:
         w = tokenize(pattern)
         # add to our words list
         all_words.extend(w)
-        # add to xy pair
         xy.append((w, tag))
 
-# stem and lower each word
+# cleaning words from ?;.
 ignore_words = ['?', '.', '!']
 all_words = [stem(w) for w in all_words if w not in ignore_words]
-# remove duplicates and sort
+# na7iw tt les duplicats
 all_words = sorted(set(all_words))
 tags = sorted(set(tags))
 
@@ -38,14 +37,13 @@ print(len(xy), "patterns")
 print(len(tags), "tags:", tags)
 print(len(all_words), "unique stemmed words:", all_words)
 
-# create training data
+# create training data :
 X_train = []
 y_train = []
 for (pattern_sentence, tag) in xy:
-    # X: bag of words for each pattern_sentence
+    # X: bag of words returns words eli aana patterns mte3hom
     bag = bag_of_words(pattern_sentence, all_words)
     X_train.append(bag)
-    # y: PyTorch CrossEntropyLoss needs only class labels, not one-hot
     label = tags.index(tag)
     y_train.append(label)
 
@@ -82,7 +80,7 @@ train_loader = DataLoader(dataset=dataset,
                           shuffle=True,
                           num_workers=0)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') #device eli bch nkhdem aalih
 
 model = NeuralNet(input_size, hidden_size, output_size).to(device)
 

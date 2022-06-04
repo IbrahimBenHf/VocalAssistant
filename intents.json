@@ -3,27 +3,17 @@
     {
       "tag": "greeting",
       "patterns": [
-        "Hi",
-        "Hey",
-        "How are you",
-        "Is anyone there?",
-        "Hello",
-        "Good day"
+        "Hi", "Hey", "How are you", "Is anyone there?", "Hello", "Good day"
       ],
       "responses": [
-        "Hey :-)",
-        "Hello, thanks for visiting",
-        "Hi there, what can I do for you?",
-        "Hi there, how can I help?"
+        "Welcome", "Hello, thanks for visiting", "Hi there, what can I do for you?", "Hi there, how can I help?"
       ]
     },
     {
       "tag": "goodbye",
       "patterns": ["Bye", "See you later", "Goodbye"],
       "responses": [
-        "See you later, thanks for visiting",
-        "Have a nice day",
-        "Bye! Come back again soon."
+        "See you later, thanks for visiting", "Have a nice day", "Bye! Come back again soon."
       ]
     },
     {
@@ -32,52 +22,47 @@
       "responses": ["Happy to help!", "Any time!", "My pleasure"]
     },
     {
-      "tag": "items",
+      "tag": "help",
       "patterns": [
-        "Which items do you have?",
-        "What kinds of items are there?",
-        "What do you sell?"
+        "help", "tips", "how does it work?"
       ],
       "responses": [
-        "We sell coffee and tea",
-        "We have coffee and tea"
+        "click on documentation link to see the whole documentation"
       ]
     },
     {
-      "tag": "payments",
+      "tag": "Suggest",
       "patterns": [
-        "Do you take credit cards?",
-        "Do you accept Mastercard?",
-        "Can I pay with Paypal?",
-        "Are you cash only?"
+        "Any suggestion?",
+        "what are the functions?",
+        "what are the functionalities?"
       ],
       "responses": [
-        "We accept VISA, Mastercard and Paypal",
-        "We accept most major credit cards, and Paypal"
+        "Say Mail or email to send a mail",
+        "Say new task to create a task",
+        "Say show task to display your tasks",
+        "Say test plan to start generating a test document"
       ]
     },
     {
-      "tag": "delivery",
+      "tag": "company",
       "patterns": [
-        "How long does delivery take?",
-        "How long does shipping take?",
-        "When do I get my delivery?"
+        "who made you?",
+        "Where are we?"
       ],
       "responses": [
-        "Delivery takes 2-4 days",
-        "Shipping takes 2-4 days"
+        "Vermeg"
       ]
     },
     {
-      "tag": "funny",
+      "tag": "name",
       "patterns": [
-        "Tell me a joke!",
-        "Tell me something funny!",
-        "Do you know a joke?"
+        "what's your name",
+        "what is your name",
+        "who are you"
       ],
       "responses": [
-        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
-        "What did the buffalo say when his son left for college? Bison."
+        "My name is Vermera, i'm your virtual assistant, here to help you."
       ]
     }
   ]
