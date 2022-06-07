@@ -3,6 +3,8 @@ import random
 import json
 import torch
 import torch.nn as nn
+from matplotlib import pyplot as plt
+import pandas as pd
 from torch.utils.data import Dataset, DataLoader
 
 from nltk_utils import bag_of_words, tokenize, stem
@@ -87,7 +89,7 @@ model = NeuralNet(input_size, hidden_size, output_size).to(device)
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
+loss_rate =[]
 # Train the model
 for epoch in range(num_epochs):
     for (words, labels) in train_loader:
@@ -104,9 +106,16 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        
+    loss_rate.append(loss.item())
     if (epoch+1) % 100 == 0:
         print (f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+
+
+plt.plot(np.array(range(1000)), np.array(loss_rate))
+plt.ylabel("Loss")
+plt.xlabel("Epochs")
+plt.title("Gradient loss Curve")
+plt.show()
 
 
 print(f'final loss: {loss.item():.4f}')

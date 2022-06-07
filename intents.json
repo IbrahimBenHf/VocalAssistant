@@ -3,31 +3,54 @@
     {
       "tag": "greeting",
       "patterns": [
-        "Hi", "Hey", "How are you", "Is anyone there?", "Hello", "Good day"
+        "Hi",
+        "Hey",
+        "How are you",
+        "Is anyone there?",
+        "Hello",
+        "Good day"
       ],
       "responses": [
-        "Welcome", "Hello, thanks for visiting", "Hi there, what can I do for you?", "Hi there, how can I help?"
+        "Welcome",
+        "Hello, thanks for visiting",
+        "Hi there, what can I do for you?",
+        "Hi there, how can I help?"
       ]
     },
     {
       "tag": "goodbye",
-      "patterns": ["Bye", "See you later", "Goodbye"],
+      "patterns": [
+        "Bye",
+        "See you later",
+        "Goodbye"],
       "responses": [
-        "See you later, thanks for visiting", "Have a nice day", "Bye! Come back again soon."
+        "See you later, thanks for visiting",
+        "Have a nice day",
+        "Bye! Come back again soon."
       ]
     },
     {
       "tag": "thanks",
-      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
-      "responses": ["Happy to help!", "Any time!", "My pleasure"]
+      "patterns": [
+        "Thanks",
+        "Thank you",
+        "That's helpful",
+        "Thank's a lot!"],
+      "responses": [
+        "Happy to help!",
+        "Any time!",
+        "My pleasure"]
     },
     {
       "tag": "help",
       "patterns": [
-        "help", "tips", "how does it work?"
+        "help",
+        "tips",
+        "how does it work?"
       ],
       "responses": [
-        "click on documentation link to see the whole documentation"
+        "click on documentation link to see the whole documentation",
+        "check out the documentation below to use our awsome functions"
       ]
     },
     {
@@ -41,7 +64,8 @@
         "Say Mail or email to send a mail",
         "Say new task to create a task",
         "Say show task to display your tasks",
-        "Say test plan to start generating a test document"
+        "Say test plan to start generating a test document",
+        "check the documentation for full description"
       ]
     },
     {
@@ -63,6 +87,20 @@
       ],
       "responses": [
         "My name is Vermera, i'm your virtual assistant, here to help you."
+      ]
+    },
+    {
+      "tag": "good",
+      "patterns": [
+        "nice",
+        "good",
+        "okay",
+        "cool"
+      ],
+      "responses": [
+        "how's work going on ?",
+        "want to add new tasks ? just say new task",
+        "any new documents to add"
       ]
     }
   ]
